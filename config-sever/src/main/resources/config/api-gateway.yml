@@ -1,0 +1,23 @@
+server:
+  port: 8090
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: merchant-service
+          uri: ${LOCALHOST}:8080
+          predicates:
+            - Path=/merchant/**
+          filters:
+            - StripPrefix=0
+
+eureka:
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+  client:
+    service-url:
+      default-zone: http://${eureka.instance.hostname}:8761/eureka/
+    register-with-eureka: true
+
