@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequestMapping("/merchant")
 @Slf4j
 @Tag(name = "Merchant", description = "Operations related to merchant ")
-public class MerchantAuthController {
+public class MerchantController {
 
     @Autowired
     private IAuthService iAuthService;
