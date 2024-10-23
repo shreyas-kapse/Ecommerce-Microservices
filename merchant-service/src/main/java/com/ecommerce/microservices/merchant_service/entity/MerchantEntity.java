@@ -1,13 +1,16 @@
 package com.ecommerce.microservices.merchant_service.entity;
 
-import com.ecommerce.microservices.merchant_service.constants.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +24,11 @@ public class MerchantEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     private UUID id;
 
     @NotBlank(message = "Password is required")
+    @JsonIgnore
     private String password;
 
     @NotBlank(message = "First name is required")
