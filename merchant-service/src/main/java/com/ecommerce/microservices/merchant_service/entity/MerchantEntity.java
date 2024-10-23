@@ -23,6 +23,9 @@ public class MerchantEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotBlank(message = "Password is required")
+    private String password;
+
     @NotBlank(message = "First name is required")
     @Size(max = 20, message = "First name can not be more than 20 characters")
     private String firstName;
@@ -67,5 +70,5 @@ public class MerchantEntity {
     @JsonManagedReference
     private List<ProductEntity> products;
 
-    private AccountStatus accountStatus;
+    private String accountStatus;
 }
