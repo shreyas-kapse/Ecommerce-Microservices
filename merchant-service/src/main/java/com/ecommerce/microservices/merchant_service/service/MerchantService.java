@@ -51,4 +51,38 @@ public class MerchantService implements IMerchantService {
                     .build();
         }
     }
+
+    @Override
+    public MerchantDTO getMerchantByEmail(String email) {
+        try {
+            log.info("Processing get merchant request for email {}", email);
+            Optional<MerchantEntity> merchant = merchantRepository.findByEmail(email);
+
+            if (merchant.isPresent() && merchant.get().getEmail().equalsIgnoreCase(email)) {
+                log.info("Successfully processed get merchant request for merchant with email {}", email);
+                return MerchantDTO.builder()
+                        .response(DefaultResponse.builder()
+                                .success(true)
+                                .build())
+                        .merchant(merchant)
+                        .build();
+            }
+            return MerchantDTO.builder()
+                    .response(DefaultResponse.builder()
+                            .success(false)
+                            .message("No merchant found")
+                            .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                            .build())
+                    .build();
+        } catch (Exception exception) {
+            log.error("Error occurred while processing get merchant by email request with error {} ", exception.getMessage());
+            return MerchantDTO.builder()
+                    .response(DefaultResponse.builder()
+                            .success(false)
+                            .message("Error occurred while fetching merchant")
+                            .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                            .build())
+                    .build();
+        }
+    }
 }

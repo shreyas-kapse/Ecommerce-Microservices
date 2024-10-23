@@ -34,7 +34,7 @@ public class MerchantController {
 
     @GetMapping("/test")
     @Operation(summary = "Test merchant ", description = "Endpoint for merchant testing")
-    public String testEndpoint(){
+    public String testEndpoint() {
         return "Testing";
     }
 
@@ -42,7 +42,7 @@ public class MerchantController {
     @Operation(summary = "Register on platform", description = "Register API")
     public ResponseEntity<DefaultResponse> register(@Valid @RequestBody RegisterMerchantDTO registerMerchantDTO, BindingResult result) {
         DefaultResponse response;
-        log.info("Processing register user request for the {}",registerMerchantDTO.getEmail());
+        log.info("Processing register user request for the {}", registerMerchantDTO.getEmail());
         if (result.hasErrors()) {
             Map<String, String> error = new HashMap<>();
             result.getFieldErrors().forEach(err -> error.put(err.getField(), err.getDefaultMessage()));
@@ -65,6 +65,16 @@ public class MerchantController {
     ) {
         log.info("Processing get merchant by company name request for the merchant with company name {}", companyName);
         MerchantDTO response = iMerchantService.getMerchantByCompanyName(companyName);
+        return response.getResponse().isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.status(response.getResponse().getHttpStatus().get()).body(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get merchant by email")
+    public ResponseEntity<MerchantDTO> getMerchantByEmail(
+            @Parameter(description = "Get merchant by email", example = "example@example.com") @RequestParam("email") String email
+    ) {
+        log.info("Processing get merchant by email request for the merchant with email {}", email);
+        MerchantDTO response = iMerchantService.getMerchantByEmail(email);
         return response.getResponse().isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.status(response.getResponse().getHttpStatus().get()).body(response);
     }
 
