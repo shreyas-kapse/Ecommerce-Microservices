@@ -1,5 +1,6 @@
 package com.ecommerce.microservices.merchant_service.controller;
 
+import com.ecommerce.microservices.merchant_service.client.ProductClient;
 import com.ecommerce.microservices.merchant_service.dto.MerchantDTO;
 import com.ecommerce.microservices.merchant_service.dto.RegisterMerchantDTO;
 import com.ecommerce.microservices.merchant_service.service.IAuthService;
@@ -30,12 +31,15 @@ public class MerchantController {
     private IAuthService iAuthService;
 
     @Autowired
+    private ProductClient productClient;
+
+    @Autowired
     private IMerchantService iMerchantService;
 
     @GetMapping("/test")
     @Operation(summary = "Test merchant ", description = "Endpoint for merchant testing")
     public String testEndpoint() {
-        return "Testing";
+        return productClient.productTest();
     }
 
     @PostMapping("/register")
