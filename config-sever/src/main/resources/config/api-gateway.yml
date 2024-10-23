@@ -11,6 +11,12 @@ spring:
             - Path=/merchant/**
           filters:
             - StripPrefix=0
+        - id: product-service
+          uri: ${LOCALHOST}:8081
+          predicates:
+            - Path=/product/**
+          filters:
+            - StripPrefix=0
 
 eureka:
   instance:
