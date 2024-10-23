@@ -3,7 +3,7 @@ package com.ecommerce.microservices.merchant_service.service;
 import com.ecommerce.microservices.merchant_service.constants.AccountStatus;
 import com.ecommerce.microservices.merchant_service.dto.RegisterMerchantDTO;
 import com.ecommerce.microservices.merchant_service.entity.MerchantEntity;
-import com.ecommerce.microservices.merchant_service.repository.AuthRepository;
+import com.ecommerce.microservices.merchant_service.repository.MerchantRepository;
 import com.ecommerce.microservices.merchant_service.utils.DefaultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ import java.util.Optional;
 public class AuthService implements IAuthService {
 
     @Autowired
-    private AuthRepository authRepository;
+    private MerchantRepository merchantRepository;
 
     @Override
     public DefaultResponse registerUser(RegisterMerchantDTO registerMerchantDTO) {
         try {
             log.info("Processing register user request");
-            Optional<MerchantEntity> user = authRepository.findUserByEmail(registerMerchantDTO.getEmail());
+            Optional<MerchantEntity> user = merchantRepository.findUserByEmail(registerMerchantDTO.getEmail());
             if (user.isPresent()) {
                 return DefaultResponse.builder()
                         .success(false)
@@ -44,7 +44,7 @@ public class AuthService implements IAuthService {
                     .companyName(registerMerchantDTO.getCompanyName())
                     .password(new BCryptPasswordEncoder(12).encode(registerMerchantDTO.getPassword()))
                     .build();
-            authRepository.save(userEntity);
+            merchantRepository.save(userEntity);
 
             log.info("Successfully processed register user request for {}", registerMerchantDTO.getEmail());
 
