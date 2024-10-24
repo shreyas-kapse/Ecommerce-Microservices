@@ -7,14 +7,13 @@ import com.ecommerce.microservices.product_service.repository.ProductRepository;
 import com.ecommerce.microservices.product_service.utils.DefaultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,16 +49,41 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductDTO> getProductsOfMerchantByMerchantId(String merchantId, int page, int size) {
+    public DefaultResponse getProductsOfMerchantByMerchantId(String merchantId, int offset, int limit) {
         try {
             log.info("Processing get all product request for merchant with id {}", merchantId);
-            Pageable pageable = PageRequest.of(page, size);
+            log.info("Requested offset: {}, limit: {}", offset, limit);
             log.info("Successfully processed get all product request for merchant with id {}", merchantId);
-            Page<ProductEntity> productEntities = productRepository.findAllByMerchantId(pageable, UUID.fromString(merchantId));
-            return productEntities.map(productEntity -> mapper.modelMapper().map(productEntity,ProductDTO.class));
+            List<ProductEntity> productEntities = productRepository.findAllByMerchantId(UUID.fromString(merchantId), offset, limit);
+            int totalRecords = productRepository.countByMerchantId(UUID.fromString(merchantId));
+            int totalPages = (int) Math.ceil((double) totalRecords / limit);
+            if (totalRecords == 0 || productEntities.isEmpty()) {
+                return DefaultResponse.builder()
+                        .success(true)
+                        .totalProducts(Optional.of(totalRecords))
+                        .totalPages(Optional.of(totalPages))
+                        .message("No records found")
+                        .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                        .build();
+            }
+            List<ProductDTO> productDTOs = productEntities.stream()
+                    .map(productEntity -> mapper.modelMapper().map(productEntity, ProductDTO.class))
+                    .collect(Collectors.toList());
+
+            return DefaultResponse.builder()
+                    .success(true)
+                    .httpStatus(Optional.of(HttpStatus.OK))
+                    .products(Optional.of(productDTOs))
+                    .totalProducts(Optional.of(totalRecords))
+                    .totalPages(Optional.of(totalPages))
+                    .build();
         } catch (Exception e) {
             log.error("Error occurred while processing get all product by merchant id request with error {} ", e.getMessage());
+            return DefaultResponse.builder()
+                    .success(false)
+                    .message("Error occurred while processing get all products of merchant request")
+                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                    .build();
         }
-        return null;
     }
 }
