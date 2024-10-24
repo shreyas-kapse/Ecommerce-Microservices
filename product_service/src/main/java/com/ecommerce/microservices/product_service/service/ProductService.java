@@ -59,7 +59,7 @@ public class ProductService implements IProductService {
             int totalPages = (int) Math.ceil((double) totalRecords / limit);
             if (totalRecords == 0 || productEntities.isEmpty()) {
                 return DefaultResponse.builder()
-                        .success(true)
+                        .success(false)
                         .totalProducts(Optional.of(totalRecords))
                         .totalPages(Optional.of(totalPages))
                         .message("No records found")
