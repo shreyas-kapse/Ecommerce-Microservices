@@ -1,5 +1,6 @@
 package com.ecommerce.microservices.product_service.controller;
 
+import com.ecommerce.microservices.product_service.dto.ProductDTO;
 import com.ecommerce.microservices.product_service.entity.ProductEntity;
 import com.ecommerce.microservices.product_service.service.IProductService;
 import com.ecommerce.microservices.product_service.utils.DefaultResponse;
@@ -33,7 +34,7 @@ public class ProductController {
     @PostMapping("/add-product")
     @Operation(summary = "Add product", description = "Add product on the platform / List product on the platform")
     public ResponseEntity<DefaultResponse> addProduct(
-            @Valid @RequestBody ProductEntity productEntity, BindingResult result
+            @Valid @RequestBody ProductDTO productEntity, BindingResult result
     ) {
         DefaultResponse response;
         if (result.hasErrors()) {

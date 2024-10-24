@@ -1,5 +1,7 @@
 package com.ecommerce.microservices.product_service.service;
 
+import com.ecommerce.microservices.product_service.config.ModelMapperConfig;
+import com.ecommerce.microservices.product_service.dto.ProductDTO;
 import com.ecommerce.microservices.product_service.entity.ProductEntity;
 import com.ecommerce.microservices.product_service.repository.ProductRepository;
 import com.ecommerce.microservices.product_service.utils.DefaultResponse;
@@ -17,13 +19,16 @@ public class ProductService implements IProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ModelMapperConfig mapper;
+
     @Override
-    public DefaultResponse addProduct(ProductEntity productEntity) {
+    public DefaultResponse addProduct(ProductDTO productEntity) {
         try {
 
             log.info("Processing add product request for merchant with id {}", productEntity.getMerchantId());
-
-            productRepository.save(productEntity);
+            ProductEntity product = mapper.modelMapper().map(productEntity,ProductEntity.class);
+            productRepository.save(product);
 
             log.info("Successfully processed add product request for merchant with id {}", productEntity.getMerchantId());
             return DefaultResponse.builder()
