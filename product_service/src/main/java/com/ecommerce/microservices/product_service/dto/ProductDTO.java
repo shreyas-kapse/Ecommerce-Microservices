@@ -1,6 +1,7 @@
 package com.ecommerce.microservices.product_service.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,7 @@ public class ProductDTO {
     @NotNull(message = "Available status is required")
     private Boolean available;
 
+    @JsonIgnore
     private UUID merchantId;
 
     private String description;
