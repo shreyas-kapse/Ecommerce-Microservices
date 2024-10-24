@@ -7,10 +7,14 @@ import com.ecommerce.microservices.product_service.repository.ProductRepository;
 import com.ecommerce.microservices.product_service.utils.DefaultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,7 +31,7 @@ public class ProductService implements IProductService {
         try {
 
             log.info("Processing add product request for merchant with id {}", productEntity.getMerchantId());
-            ProductEntity product = mapper.modelMapper().map(productEntity,ProductEntity.class);
+            ProductEntity product = mapper.modelMapper().map(productEntity, ProductEntity.class);
             productRepository.save(product);
 
             log.info("Successfully processed add product request for merchant with id {}", productEntity.getMerchantId());
@@ -43,5 +47,18 @@ public class ProductService implements IProductService {
                     .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
                     .build();
         }
+    }
+
+    @Override
+    public Page<ProductEntity> getProductsOfMerchantByMerchantId(String merchantId, int page, int size) {
+        try {
+            log.info("Processing get all product request for merchant with id {}", merchantId);
+            Pageable pageable = PageRequest.of(page, size);
+            log.info("Successfully processed get all product request for merchant with id {}", merchantId);
+            return productRepository.findAllByMerchantId(pageable, UUID.fromString(merchantId));
+        } catch (Exception e) {
+            log.error("Error occurred while processing get all product by merchant id request with error {} ", e.getMessage());
+        }
+        return null;
     }
 }
