@@ -1,6 +1,8 @@
 package com.ecommerce.microservices.merchant_service.service;
 
+import com.ecommerce.microservices.merchant_service.client.ProductClient;
 import com.ecommerce.microservices.merchant_service.dto.MerchantDTO;
+import com.ecommerce.microservices.merchant_service.dto.ProductDTO;
 import com.ecommerce.microservices.merchant_service.entity.MerchantEntity;
 import com.ecommerce.microservices.merchant_service.repository.MerchantRepository;
 import com.ecommerce.microservices.merchant_service.utils.DefaultResponse;
@@ -17,6 +19,9 @@ public class MerchantService implements IMerchantService {
 
     @Autowired
     private MerchantRepository merchantRepository;
+
+    @Autowired
+    private ProductClient productClient;
 
     @Override
     public MerchantDTO getMerchantByCompanyName(String companyName) {
@@ -84,5 +89,10 @@ public class MerchantService implements IMerchantService {
                             .build())
                     .build();
         }
+    }
+
+    @Override
+    public DefaultResponse addProduct(ProductDTO productEntity) {
+        return productClient.addProduct(productEntity);
     }
 }

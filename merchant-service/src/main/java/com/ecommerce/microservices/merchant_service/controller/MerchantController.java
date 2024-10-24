@@ -2,6 +2,7 @@ package com.ecommerce.microservices.merchant_service.controller;
 
 import com.ecommerce.microservices.merchant_service.client.ProductClient;
 import com.ecommerce.microservices.merchant_service.dto.MerchantDTO;
+import com.ecommerce.microservices.merchant_service.dto.ProductDTO;
 import com.ecommerce.microservices.merchant_service.dto.RegisterMerchantDTO;
 import com.ecommerce.microservices.merchant_service.service.IAuthService;
 import com.ecommerce.microservices.merchant_service.service.IMerchantService;
@@ -80,6 +81,31 @@ public class MerchantController {
         log.info("Processing get merchant by email request for the merchant with email {}", email);
         MerchantDTO response = iMerchantService.getMerchantByEmail(email);
         return response.getResponse().isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.status(response.getResponse().getHttpStatus().get()).body(response);
+    }
+
+    @PostMapping("/product/add-product")
+    @Operation(summary = "Add product", description = "Add product on the platform / List product on the platform")
+    public ResponseEntity<DefaultResponse> addProduct(
+            @Valid @RequestBody ProductDTO productEntity, BindingResult result
+    ) {
+        DefaultResponse response;
+        if (result.hasErrors()) {
+            Map<String, String> error = new HashMap<>();
+            result.getFieldErrors().forEach(err ->
+                    error.put(err.getField(), err.getDefaultMessage())
+            );
+            response = DefaultResponse.builder()
+                    .success(false)
+                    .message("Validation failed")
+                    .errors(Optional.of(error))
+                    .build();
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        log.info("Processing add product request for product with name {} and brand name {}", productEntity.getProductName(), productEntity.getBrand());
+        response = iMerchantService.addProduct(productEntity);
+
+        return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
     }
 
 }
