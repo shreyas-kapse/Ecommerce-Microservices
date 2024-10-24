@@ -10,5 +10,5 @@ public interface IProductService {
 
     DefaultResponse addProduct(@Valid ProductDTO productEntity);
 
-    Page<ProductEntity> getProductsOfMerchantByMerchantId(String merchantId, int page, int size);
+    Page<ProductDTO> getProductsOfMerchantByMerchantId(String merchantId, int page, int size);
 }

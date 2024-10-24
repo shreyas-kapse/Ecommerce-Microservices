@@ -60,13 +60,13 @@ public class ProductController {
 
     @GetMapping("/all/{merchantId}")
     @Operation(summary = "Get all products of merchant by merchant id")
-    public ResponseEntity<Page<ProductEntity>> getProductsOfMerchantByMerchantId(
+    public ResponseEntity<Page<ProductDTO>> getProductsOfMerchantByMerchantId(
             @Parameter(description = "Merchant Id") @PathVariable("merchantId") String merchantId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("Processing get merchant by merchant name request for the merchant with id {}", merchantId);
-        Page<ProductEntity> productsDTO = iProductService.getProductsOfMerchantByMerchantId(merchantId, page, size);
+        Page<ProductDTO> productsDTO = iProductService.getProductsOfMerchantByMerchantId(merchantId, page, size);
         return ResponseEntity.ok(productsDTO);
     }
 }

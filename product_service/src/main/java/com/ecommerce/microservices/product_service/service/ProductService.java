@@ -50,12 +50,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductEntity> getProductsOfMerchantByMerchantId(String merchantId, int page, int size) {
+    public Page<ProductDTO> getProductsOfMerchantByMerchantId(String merchantId, int page, int size) {
         try {
             log.info("Processing get all product request for merchant with id {}", merchantId);
             Pageable pageable = PageRequest.of(page, size);
             log.info("Successfully processed get all product request for merchant with id {}", merchantId);
-            return productRepository.findAllByMerchantId(pageable, UUID.fromString(merchantId));
+            Page<ProductEntity> productEntities = productRepository.findAllByMerchantId(pageable, UUID.fromString(merchantId));
+            return productEntities.map(productEntity -> mapper.modelMapper().map(productEntity,ProductDTO.class));
         } catch (Exception e) {
             log.error("Error occurred while processing get all product by merchant id request with error {} ", e.getMessage());
         }
