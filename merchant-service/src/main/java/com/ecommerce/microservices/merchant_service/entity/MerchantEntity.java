@@ -1,8 +1,10 @@
 package com.ecommerce.microservices.merchant_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +14,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -70,10 +71,6 @@ public class MerchantEntity {
     @NotBlank(message = "Country is required")
     @Size(max = 15, message = "Country name can not be more than 15 characters")
     private String country;
-
-    @OneToMany(mappedBy = "merchant")
-    @JsonManagedReference
-    private List<ProductEntity> products;
 
     private String accountStatus;
 }
