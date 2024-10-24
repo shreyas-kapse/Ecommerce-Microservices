@@ -20,7 +20,7 @@ public interface ProductClient {
     public DefaultResponse addProduct(@RequestBody ProductDTO productDTO);
 
     @GetExchange("/product/all/{merchantId}")
-    public ResponseEntity<DefaultResponse> getProductsOfMerchantByMerchantId(
+    public DefaultResponse getProductsOfMerchantByMerchantId(
             @Parameter(description = "Merchant Id") @PathVariable("merchantId") String merchantId,
             @RequestParam int page,
             @RequestParam int size
