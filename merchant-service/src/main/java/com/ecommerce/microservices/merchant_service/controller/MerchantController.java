@@ -40,7 +40,7 @@ public class MerchantController {
     @GetMapping("/test")
     @Operation(summary = "Test merchant ", description = "Endpoint for merchant testing")
     public String testEndpoint() {
-        return "Str";
+        return "Testing";
     }
 
     @PostMapping("/register")
@@ -111,7 +111,7 @@ public class MerchantController {
     @GetMapping("/product/all/{merchantId}")
     @Operation(summary = "Get all products of merchant by merchant id")
     public ResponseEntity<DefaultResponse> getProductsOfMerchantByMerchantId(
-            @Parameter(description = "Merchant Id") @PathVariable("merchantId") String merchantId,
+            @Parameter(description = "Merchant Id", example = "987e1234-e89b-12d3-a456-426614174321") @PathVariable("merchantId") String merchantId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit
     ) {
