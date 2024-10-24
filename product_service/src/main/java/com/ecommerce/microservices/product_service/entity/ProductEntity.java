@@ -1,5 +1,6 @@
 package com.ecommerce.microservices.product_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     private UUID id;
 
     @NotBlank(message = "Product name can not be blank")
@@ -47,6 +49,7 @@ public class ProductEntity {
     @NotNull(message = "Available status is required")
     private Boolean available;
 
+    @JsonIgnore
     private UUID merchantId;
 
     private String description;
