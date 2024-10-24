@@ -28,7 +28,6 @@ public class DefaultResponse {
     @Builder.Default
     private Optional<Map<String, String>> data = Optional.empty();
 
-    @JsonIgnore
     private Optional<HttpStatus> httpStatus;
 
     @Builder.Default

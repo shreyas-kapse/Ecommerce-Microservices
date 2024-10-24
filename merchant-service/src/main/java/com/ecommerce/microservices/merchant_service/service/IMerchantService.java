@@ -11,4 +11,6 @@ public interface IMerchantService {
     MerchantDTO getMerchantByEmail(String email);
 
     DefaultResponse addProduct(@Valid ProductDTO productEntity);
+
+    DefaultResponse getProductsOfMerchantByMerchantId(String merchantId, int offset, int limit);
 }

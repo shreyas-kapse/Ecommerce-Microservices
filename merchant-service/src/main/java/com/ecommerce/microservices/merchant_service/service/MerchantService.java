@@ -95,4 +95,9 @@ public class MerchantService implements IMerchantService {
     public DefaultResponse addProduct(ProductDTO productEntity) {
         return productClient.addProduct(productEntity);
     }
+
+    @Override
+    public DefaultResponse getProductsOfMerchantByMerchantId(String merchantId, int offset, int limit) {
+        return productClient.getProductsOfMerchantByMerchantId(merchantId,offset,limit);
+    }
 }

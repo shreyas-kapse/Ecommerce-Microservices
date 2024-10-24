@@ -40,7 +40,7 @@ public class MerchantController {
     @GetMapping("/test")
     @Operation(summary = "Test merchant ", description = "Endpoint for merchant testing")
     public String testEndpoint() {
-        return productClient.productTest();
+        return "Str";
     }
 
     @PostMapping("/register")
@@ -105,6 +105,21 @@ public class MerchantController {
         log.info("Processing add product request for product with name {} and brand name {}", productEntity.getProductName(), productEntity.getBrand());
         response = iMerchantService.addProduct(productEntity);
 
+        return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/product/all/{merchantId}")
+    @Operation(summary = "Get all products of merchant by merchant id")
+    public ResponseEntity<DefaultResponse> getProductsOfMerchantByMerchantId(
+            @Parameter(description = "Merchant Id") @PathVariable("merchantId") String merchantId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        log.info("Processing get merchant by merchant name request for the merchant with id {}", merchantId);
+        DefaultResponse response = iMerchantService.getProductsOfMerchantByMerchantId(merchantId, offset, limit);
+        if(response==null){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
         return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
     }
 
