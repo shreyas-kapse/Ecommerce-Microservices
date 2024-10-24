@@ -1,5 +1,7 @@
 package com.ecommerce.microservices.product_service.utils;
 
+import com.ecommerce.microservices.product_service.dto.ProductDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,5 +28,14 @@ public class DefaultResponse {
     @Builder.Default
     private Optional<Map<String, String>> data = Optional.empty();
 
+    @JsonIgnore
     private Optional<HttpStatus> httpStatus;
+
+    @Builder.Default
+    private Optional<List<ProductDTO>> products = Optional.empty();
+
+    private Optional<Integer> totalPages;
+
+    private Optional<Integer> totalProducts;
+
 }
