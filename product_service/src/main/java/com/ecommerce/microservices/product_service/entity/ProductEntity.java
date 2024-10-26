@@ -22,7 +22,6 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonIgnore
     private UUID id;
 
     @NotBlank(message = "Product name can not be blank")
