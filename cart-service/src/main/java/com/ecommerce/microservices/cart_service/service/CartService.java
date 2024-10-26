@@ -192,6 +192,43 @@ public class CartService implements ICartService {
         }
     }
 
+    @Override
+    public DefaultResponse clearCart(String userId) {
+        try {
+            log.info("Processing clear cart request for user with id {}", userId);
+
+            Optional<CartEntity> cartEntityOptional = cartRepository.findByUserId(UUID.fromString(userId));
+            CartEntity cart;
+
+            cart = cartEntityOptional.orElseGet(() -> createNewCart(UUID.fromString(userId)));
+            if (cart == null) {
+                return DefaultResponse.builder()
+                        .success(false)
+                        .message("Error occurred while clearing the cart")
+                        .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                        .build();
+            }
+            cart.getCartItems().clear();
+
+            cartRepository.save(cart);
+
+            log.info("Successfully processed clear cart request for user with id {}", userId);
+            return DefaultResponse.builder()
+                    .success(true)
+                    .message("Cart cleared successfully")
+                    .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                    .build();
+
+        } catch (Exception e) {
+            log.error("Error occurred while processing clear cart request with error {} ", e.getMessage());
+            return DefaultResponse.builder()
+                    .success(false)
+                    .message("Error occurred while clearing the cart")
+                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                    .build();
+        }
+    }
+
     public CartEntity createNewCart(UUID userId) {
         try {
             log.info("Processing create new cart request for user with id {}", userId);

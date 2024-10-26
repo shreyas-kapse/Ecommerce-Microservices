@@ -9,4 +9,6 @@ public interface ICartService {
     CartDTOResponse getCart(String userId);
 
     DefaultResponse removeProductFromCart(String productId, String userId);
+
+    DefaultResponse clearCart(String userId);
 }

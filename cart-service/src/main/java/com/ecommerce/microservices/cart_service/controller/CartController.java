@@ -65,4 +65,17 @@ public class CartController {
 
         return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/clear")
+    @Operation(summary = "Clear cart", description = "Remove all products from cart")
+    public ResponseEntity<DefaultResponse> clearCart(
+            @RequestParam(name = "User Id", defaultValue = "987e1234-e89b-12d3-a456-426614174321") String userId
+    ) {
+        log.info("Processing clear cart request ");
+
+        DefaultResponse response = iCartService.clearCart(userId);
+
+        return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
+
+    }
 }
