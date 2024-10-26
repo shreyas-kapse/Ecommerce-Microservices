@@ -1,6 +1,7 @@
 package com.ecommerce.microservices.cart_service.dto;
 
 import com.ecommerce.microservices.cart_service.entity.CartItem;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import java.util.List;
 @Builder
 @Data
 public class CartDTO {
+    @JsonIgnore
     private String cartId;
 
     @JsonManagedReference
