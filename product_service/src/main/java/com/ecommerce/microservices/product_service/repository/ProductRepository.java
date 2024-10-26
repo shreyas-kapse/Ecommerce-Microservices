@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -20,4 +21,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
 
     @Query(value = "SELECT COUNT(*) FROM product_entity WHERE merchant_id = :merchantId", nativeQuery = true)
     int countByMerchantId(@Param("merchantId") UUID merchantId);
+
+    @Query(value = "SELECT *FROM product_entity WHERE brand = :brand limit :limit offset :offset", nativeQuery = true)
+    Optional<List<ProductEntity>> findAllByBrand(@Param("brand") String brand, @Param("limit") int limit, @Param("offset") int offset);
 }

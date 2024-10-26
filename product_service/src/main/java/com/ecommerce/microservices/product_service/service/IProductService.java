@@ -11,4 +11,6 @@ public interface IProductService {
     DefaultResponse getProductsOfMerchantByMerchantId(String merchantId, int offset, int limit);
 
     ProductDTO getProductById(String id);
+
+    DefaultResponse getProductsByBrandName(String brand, int limit, int offset);
 }

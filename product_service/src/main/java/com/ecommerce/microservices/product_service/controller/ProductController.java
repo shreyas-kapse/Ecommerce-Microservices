@@ -78,4 +78,19 @@ public class ProductController {
         ProductDTO productDTO = iProductService.getProductById(id);
         return !productDTO.getSuccess().get() ? ResponseEntity.status(productDTO.getHttpStatus().get()).body(productDTO) : ResponseEntity.ok(productDTO);
     }
+
+    @GetMapping("/brand/{brand}")
+    @Operation(summary = "Get products by brand name", description = "List all products of given brand")
+    public ResponseEntity<DefaultResponse> getProductsByBrandName(
+            @Parameter(description = "Brand name", example = "SampleBrand") @PathVariable("brand") String brand,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        log.info("Processing get products by brand name request for {} brand", brand);
+        DefaultResponse response = iProductService.getProductsByBrandName(brand, limit, offset);
+        if (!response.isSuccess()) {
+            return ResponseEntity.status(response.getHttpStatus().get()).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
 }
