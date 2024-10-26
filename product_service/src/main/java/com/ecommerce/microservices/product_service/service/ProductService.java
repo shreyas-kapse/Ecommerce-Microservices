@@ -148,4 +148,39 @@ public class ProductService implements IProductService {
                     .build();
         }
     }
+
+    @Override
+    public DefaultResponse getProductsByCategoryName(String categoryName, int limit, int offset) {
+        try {
+            Optional<List<ProductEntity>> products = productRepository.findAllByCategory(categoryName, limit, offset);
+            log.info("Processing get products by category name request for category name {}", categoryName);
+
+            if (products.get().isEmpty()) {
+                return DefaultResponse.builder()
+                        .success(false)
+                        .message("No products found")
+                        .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                        .build();
+            }
+
+            log.info("Successfully processed get products by category name request for category name {}", categoryName);
+            List<ProductDTO> productDTOS = products.get().stream()
+                    .map(productEntity -> mapper.modelMapper().map(productEntity, ProductDTO.class))
+                    .toList();
+
+            return DefaultResponse.builder()
+                    .totalProducts(Optional.of(products.get().size()))
+                    .products(Optional.of(productDTOS))
+                    .success(true)
+                    .httpStatus(Optional.of(HttpStatus.OK))
+                    .build();
+        } catch (Exception e) {
+            log.error("Error occurred while processing get products by category name request with category name {} and error {}", categoryName, e.getMessage());
+            return DefaultResponse.builder()
+                    .success(false)
+                    .message("Error occurred while fetching the records")
+                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                    .build();
+        }
+    }
 }

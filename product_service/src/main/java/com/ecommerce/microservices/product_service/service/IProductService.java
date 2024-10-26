@@ -13,4 +13,6 @@ public interface IProductService {
     ProductDTO getProductById(String id);
 
     DefaultResponse getProductsByBrandName(String brand, int limit, int offset);
+
+    DefaultResponse getProductsByCategoryName(String categoryName, int limit, int offset);
 }

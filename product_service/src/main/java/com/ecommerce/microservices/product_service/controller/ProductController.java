@@ -93,4 +93,19 @@ public class ProductController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/category/{categoryName}")
+    @Operation(summary = "Get products by category name", description = "List all products of given category")
+    public ResponseEntity<DefaultResponse> getProductsByCategoryName(
+            @Parameter(description = "Category Name", example = "Electronics") @PathVariable("categoryName") String categoryName,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        log.info("Processing get products by category name request for {} category", categoryName);
+        DefaultResponse response = iProductService.getProductsByCategoryName(categoryName, limit, offset);
+        if (!response.isSuccess()) {
+            return ResponseEntity.status(response.getHttpStatus().get()).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
 }

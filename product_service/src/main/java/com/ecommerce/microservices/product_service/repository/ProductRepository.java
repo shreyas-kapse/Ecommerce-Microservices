@@ -24,4 +24,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
 
     @Query(value = "SELECT *FROM product_entity WHERE brand = :brand limit :limit offset :offset", nativeQuery = true)
     Optional<List<ProductEntity>> findAllByBrand(@Param("brand") String brand, @Param("limit") int limit, @Param("offset") int offset);
+
+    @Query(value = "SELECT *FROM product_entity WHERE category = :category limit :limit offset :offset", nativeQuery = true)
+    Optional<List<ProductEntity>> findAllByCategory(@Param("category") String categoryName, @Param("limit") int limit, @Param("offset") int offset);
 }
