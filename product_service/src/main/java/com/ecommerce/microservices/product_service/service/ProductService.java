@@ -86,4 +86,31 @@ public class ProductService implements IProductService {
                     .build();
         }
     }
+
+    @Override
+    public ProductDTO getProductById(String id) {
+        try {
+            Optional<ProductEntity> product = productRepository.findById(UUID.fromString(id));
+            log.info("Processing get product by id request with id {}", id);
+
+            if (product.isEmpty()) {
+                return ProductDTO.builder()
+                        .success(Optional.of(false))
+                        .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                        .build();
+            }
+
+            log.info("Successfully processed get product by id request with id {}", id);
+            ProductDTO productDTO = mapper.modelMapper().map(product.get(), ProductDTO.class);
+            productDTO.setSuccess(Optional.of(true));
+            productDTO.setHttpStatus(Optional.of(HttpStatus.OK));
+            return productDTO;
+        } catch (Exception e) {
+            log.error("Error occurred while processing get product by id with id {} and error {}", id, e.getMessage());
+            return ProductDTO.builder()
+                    .success(Optional.of(false))
+                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                    .build();
+        }
+    }
 }

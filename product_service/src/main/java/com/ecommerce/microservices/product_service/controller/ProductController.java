@@ -68,4 +68,14 @@ public class ProductController {
 
         return ResponseEntity.status(response.getHttpStatus().get()).body(response);
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get product by id")
+    public ResponseEntity<ProductDTO> getProductsById(
+            @Parameter(description = "Product Id") @PathVariable("id") String id
+    ) {
+        log.info("Processing get product by product id {}", id);
+        ProductDTO productDTO = iProductService.getProductById(id);
+        return !productDTO.getSuccess().get() ? ResponseEntity.status(productDTO.getHttpStatus().get()).body(productDTO) : ResponseEntity.ok(productDTO);
+    }
 }

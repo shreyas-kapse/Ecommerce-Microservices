@@ -9,4 +9,6 @@ public interface IProductService {
     DefaultResponse addProduct(@Valid ProductDTO productEntity);
 
     DefaultResponse getProductsOfMerchantByMerchantId(String merchantId, int offset, int limit);
+
+    ProductDTO getProductById(String id);
 }
