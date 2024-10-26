@@ -25,7 +25,11 @@ public class CartController {
 
     @PostMapping("/add-product")
     @Operation(summary = "Add product to the cart")
-    public ResponseEntity<DefaultResponse> addProductToCart(@RequestParam String productId, @RequestParam String userId, @RequestParam int quantity) {
+    public ResponseEntity<DefaultResponse> addProductToCart(
+            @RequestParam(name = "Product Id", defaultValue = "73ebbbd7-8729-4f30-9a0f-53c1731b79ed") String productId,
+            @RequestParam(name = "User Id", defaultValue = "987e1234-e89b-12d3-a456-426614174321") String userId,
+            @RequestParam int quantity
+    ) {
         String token;
         DefaultResponse response;
 
