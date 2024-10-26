@@ -1,6 +1,8 @@
 package com.ecommerce.microservices.cart_service.service;
 
 import com.ecommerce.microservices.cart_service.client.ProductClient;
+import com.ecommerce.microservices.cart_service.dto.CartDTO;
+import com.ecommerce.microservices.cart_service.dto.CartDTOResponse;
 import com.ecommerce.microservices.cart_service.dto.ProductDTO;
 import com.ecommerce.microservices.cart_service.entity.CartEntity;
 import com.ecommerce.microservices.cart_service.entity.CartItem;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,13 +73,19 @@ public class CartService implements ICartService {
                         .build();
             }
 
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setProductId(UUID.fromString(productId));
-            newItem.setQuantity(quantity);
-            newItem.setPrice(BigDecimal.valueOf(product.getPrice()));
-            cart.getCartItems().add(newItem);
+            CartItem newItem = CartItem.builder()
+                    .available(product.getAvailable())
+                    .brand(product.getBrand())
+                    .cart(cart)
+                    .price(product.getPrice())
+                    .category(product.getCategory())
+                    .productName(product.getProductName())
+                    .description(product.getDescription())
+                    .productId(product.getId())
+                    .quantity(product.getQuantity())
+                    .build();
 
+            cart.getCartItems().add(newItem);
             cartRepository.save(cart);
 
             log.info("Successfully processed request to add product to cart with product id {} for user with id {}", productId, userId);
@@ -93,6 +100,59 @@ public class CartService implements ICartService {
                     .success(false)
                     .message("Error occurred while adding product")
                     .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                    .build();
+        }
+    }
+
+    @Override
+    public CartDTOResponse getCart(String userId) {
+        try {
+            log.info("Processing get cart request for user with id {}", userId);
+
+            Optional<CartEntity> cartEntityOptional = cartRepository.findByUserId(UUID.fromString(userId));
+            CartEntity cart;
+            if (cartEntityOptional.isEmpty()) {
+                cart = createNewCart(UUID.fromString(userId));
+                if (cart == null) {
+                    return CartDTOResponse.builder()
+                            .response(DefaultResponse.builder()
+                                    .success(false)
+                                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                                    .build())
+                            .build();
+                }
+                cartRepository.save(cart);
+
+                return CartDTOResponse.builder()
+                        .response(DefaultResponse.builder()
+                                .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                                .build())
+                        .build();
+            } else {
+                cart = cartEntityOptional.get();
+                CartDTO cartDTO = CartDTO.builder()
+                        .cartId(cart.getId().toString())
+                        .cartItems(cart.getCartItems())
+                        .createdAt(cart.getCreatedAt())
+                        .updatedAt(cart.getUpdatedAt())
+                        .build();
+
+                log.info("Successfully processed get cart request for user with id {}", userId);
+                return CartDTOResponse.builder()
+                        .response(DefaultResponse.builder()
+                                .success(true)
+                                .build())
+                        .cart(Optional.of(cartDTO))
+                        .build();
+            }
+        } catch (Exception exception) {
+            log.error("Error occurred while processing get cart request with error {} ", exception.getMessage());
+            return CartDTOResponse.builder()
+                    .response(DefaultResponse.builder()
+                            .success(false)
+                            .message("Error occurred while processing get cart request")
+                            .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                            .build())
                     .build();
         }
     }

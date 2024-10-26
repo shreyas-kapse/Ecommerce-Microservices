@@ -1,5 +1,6 @@
 package com.ecommerce.microservices.cart_service.controller;
 
+import com.ecommerce.microservices.cart_service.dto.CartDTOResponse;
 import com.ecommerce.microservices.cart_service.service.ICartService;
 import com.ecommerce.microservices.cart_service.utils.DefaultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,5 +39,17 @@ public class CartController {
         response = iCartService.addProductToCart(productId, userId, quantity);
 
         return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get cart items", description = "Get all cart items")
+    public ResponseEntity<CartDTOResponse> getCart(
+            @RequestParam(name = "User Id", defaultValue = "987e1234-e89b-12d3-a456-426614174321") String userId
+    ) {
+        log.info("Processing get cart items request ");
+
+        CartDTOResponse cartDTOResponse = iCartService.getCart(userId);
+
+        return !cartDTOResponse.getResponse().isSuccess() ? ResponseEntity.status(cartDTOResponse.getResponse().getHttpStatus().get()).body(cartDTOResponse) : ResponseEntity.ok(cartDTOResponse);
     }
 }
