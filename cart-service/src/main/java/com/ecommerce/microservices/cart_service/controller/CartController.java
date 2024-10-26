@@ -52,4 +52,17 @@ public class CartController {
 
         return !cartDTOResponse.getResponse().isSuccess() ? ResponseEntity.status(cartDTOResponse.getResponse().getHttpStatus().get()).body(cartDTOResponse) : ResponseEntity.ok(cartDTOResponse);
     }
+
+    @DeleteMapping("/remove")
+    @Operation(summary = "Delete product from cart", description = "Delete product from cart by product id")
+    public ResponseEntity<DefaultResponse> removeProductFromCart(
+            @RequestParam(name = "Product Id", defaultValue = "73ebbbd7-8729-4f30-9a0f-53c1731b79ed") String productId,
+            @RequestParam(name = "User Id", defaultValue = "987e1234-e89b-12d3-a456-426614174321") String userId
+    ) {
+        log.info("Processing remove product request for product id {}", productId);
+
+        DefaultResponse response = iCartService.removeProductFromCart(productId, userId);
+
+        return !response.isSuccess() ? ResponseEntity.status(response.getHttpStatus().get()).body(response) : ResponseEntity.ok(response);
+    }
 }

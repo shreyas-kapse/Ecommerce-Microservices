@@ -82,7 +82,7 @@ public class CartService implements ICartService {
                     .productName(product.getProductName())
                     .description(product.getDescription())
                     .productId(product.getId())
-                    .quantity(product.getQuantity())
+                    .quantity((long) quantity)
                     .build();
 
             cart.getCartItems().add(newItem);
@@ -153,6 +153,41 @@ public class CartService implements ICartService {
                             .message("Error occurred while processing get cart request")
                             .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
                             .build())
+                    .build();
+        }
+    }
+
+    @Override
+    public DefaultResponse removeProductFromCart(String productId, String userId) {
+        try {
+            log.info("Processing remove product from cart request with product id {} for user with id {}", productId, userId);
+            Optional<CartEntity> cartEntityOptional = cartRepository.findByUserId(UUID.fromString(userId));
+            CartEntity cart;
+
+            cart = cartEntityOptional.orElseGet(() -> createNewCart(UUID.fromString(userId)));
+            if (cart == null) {
+                DefaultResponse.builder()
+                        .success(false)
+                        .message("Error occurred while removing product")
+                        .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
+                        .build();
+            }
+            cart.getCartItems().removeIf(item -> item.getProductId().equals(UUID.fromString(productId)));
+
+            cartRepository.save(cart);
+
+            log.info("Successfully processed request to remove product from cart with product id {} for user with id {}", productId, userId);
+            return DefaultResponse.builder()
+                    .success(true)
+                    .message("Product removed successfully")
+                    .httpStatus(Optional.of(HttpStatus.NO_CONTENT))
+                    .build();
+        } catch (Exception e) {
+            log.error("Error occurred while processing request to remove product from cart with error {} ", e.getMessage());
+            return DefaultResponse.builder()
+                    .success(false)
+                    .message("Error occurred while removing product")
+                    .httpStatus(Optional.of(HttpStatus.INTERNAL_SERVER_ERROR))
                     .build();
         }
     }

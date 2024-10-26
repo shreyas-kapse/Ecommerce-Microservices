@@ -7,4 +7,6 @@ public interface ICartService {
     DefaultResponse addProductToCart(String productId, String userId, int quantity);
 
     CartDTOResponse getCart(String userId);
+
+    DefaultResponse removeProductFromCart(String productId, String userId);
 }
