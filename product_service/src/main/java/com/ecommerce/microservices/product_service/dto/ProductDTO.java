@@ -2,19 +2,25 @@ package com.ecommerce.microservices.product_service.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProductDTO {
+
+    private UUID id;
 
     @NotBlank(message = "Product name can not be blank")
     @Size(max = 20, min = 3, message = "Product name can not be less than 3 and more than 15 characters")
@@ -44,4 +50,8 @@ public class ProductDTO {
     private UUID merchantId;
 
     private String description;
+
+    private Optional<HttpStatus> httpStatus;
+
+    private Optional<Boolean> success;
 }

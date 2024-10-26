@@ -15,6 +15,8 @@ import java.util.UUID;
 @Data
 public class ProductDTO {
 
+    private UUID id;
+
     @NotBlank(message = "Product name can not be blank")
     @Size(max = 20, min = 3, message = "Product name can not be less than 3 and more than 15 characters")
     private String productName;
