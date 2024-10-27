@@ -23,6 +23,12 @@ spring:
             - Path=/cart/**
           filters:
             - StripPrefix=0
+        - id: order-service
+          uri: ${LOCALHOST}:8083
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=0
 
 eureka:
   instance:
